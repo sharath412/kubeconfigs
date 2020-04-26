@@ -1,25 +1,11 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: gateway
-  namespace: local
-spec:
-  selector:
-    app: gateway
-  ports:
-  - protocol: "TCP"
-    port: 9080
-    targetPort: 8080
-  type: LoadBalancer
----
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: gateway
+  name: db-service
   namespace: local
   generation: 4
   labels:
-    app: gateway
+    app: db-service
     layer: backend
   annotations:
     deployment.kubernetes.io/revision: '2'
@@ -27,15 +13,15 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gateway
+      app: db-service
   template:
     metadata:
       labels:
-        app: gateway
+        app: db-service
     spec:
       containers:
-        - name: gateway
-          image: 'myrepo/spring-gateway'
+        - name: db-service
+          image: 'myrepo/spring-docker-db-service'
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -54,13 +40,13 @@ spec:
               port: 8080
             initialDelaySeconds: 30
             timeoutSeconds: 2
-            periodSeconds: 5                             
+            periodSeconds: 5                               
           resources:
             requests:
               memory: "32Mi"
               cpu: "200m"
             limits:
-              memory: "129Mi"
+              memory: "128Mi"
               cpu: "500m"  
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
