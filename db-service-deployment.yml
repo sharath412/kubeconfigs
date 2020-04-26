@@ -16,7 +16,6 @@ spec:
       app: db-service
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: db-service
     spec:
