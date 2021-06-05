@@ -1,16 +1,4 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: consul
-  namespace: local
-spec:
-  selector:
-    app: consul
-  ports:
-  - protocol: "TCP"
-    port: 8500
-    targetPort: 8500
-  type: LoadBalancer
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -41,4 +29,36 @@ spec:
               cpu: "200m"
             limits:
               memory: "128Mi"
-              cpu: "500m"  
+              cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consul
+  namespace: local
+spec:
+  selector:
+    app: consul
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: 8500
+  type: LoadBalancer
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  name: consul
+  namespace: local
+spec:
+  rules:
+    - host: consul-local
+      http:
+        paths:
+          - backend:
+              serviceName: consul
+              servicePort: 8500
+            path: /
