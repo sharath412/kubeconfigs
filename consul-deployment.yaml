@@ -44,7 +44,7 @@ spec:
     - protocol: "TCP"
       port: 80
       targetPort: 8500
-  type: LoadBalancer
+  type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress

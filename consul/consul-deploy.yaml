@@ -10,7 +10,7 @@ metadata:
   annotations:
     deployment.kubernetes.io/revision: '2'
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: consul
@@ -19,16 +19,9 @@ spec:
       labels:
         app: consul
     spec:
-      volumes:
-        - name: consul-config-mount
-          configMap:
-            name: consul-config
       containers:
         - name: consul
           image: 'consul:latest'
-          volumeMounts: 
-            - name: consul-config-mount
-              mountPath: /etc/consul.d
           env:
             - name: HOST_IP
               valueFrom:
